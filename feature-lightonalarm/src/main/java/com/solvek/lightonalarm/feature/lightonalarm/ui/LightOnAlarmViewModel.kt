@@ -18,38 +18,46 @@ package com.solvek.lightonalarm.feature.lightonalarm.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.solvek.lightonalarm.core.data.LightOnAlarmRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import com.solvek.lightonalarm.core.data.LightOnAlarmRepositoryOld
 import com.solvek.lightonalarm.feature.lightonalarm.ui.LightOnAlarmUiState.Error
 import com.solvek.lightonalarm.feature.lightonalarm.ui.LightOnAlarmUiState.Loading
 import com.solvek.lightonalarm.feature.lightonalarm.ui.LightOnAlarmUiState.Success
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
 class LightOnAlarmViewModel @Inject constructor(
-    private val lightOnAlarmRepository: LightOnAlarmRepositoryOld
+    private val lightOnAlarmRepository: LightOnAlarmRepository
 ) : ViewModel() {
 
     val uiState: StateFlow<LightOnAlarmUiState> = lightOnAlarmRepository
-        .lightOnAlarms.map { Success(data = it) }
+        .isAlarmEnabledChanges
+        .combine(lightOnAlarmRepository.isPlayingChanges) { isEnabled, isPlaying ->
+            Success(isEnabled, isPlaying)
+        }
         .catch { Error(it) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), Loading)
 
-    fun addLightOnAlarm(name: String) {
+//    val uiState: StateFlow<LightOnAlarmUiState> = lightOnAlarmRepositoryOld
+//        .lightOnAlarms.map { Success(data = it) }
+//        .catch { Error(it) }
+//        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), Loading)
+
+    fun changeAlarmSetting(enabled: Boolean) {
         viewModelScope.launch {
-            lightOnAlarmRepository.add(name)
+            lightOnAlarmRepository.setAlarmEnabled(enabled)
         }
+    }
+
+    fun stopPlaying(){
+        lightOnAlarmRepository.stopPlaying()
     }
 }
 
 sealed interface LightOnAlarmUiState {
     object Loading : LightOnAlarmUiState
     data class Error(val throwable: Throwable) : LightOnAlarmUiState
-    data class Success(val data: List<String>) : LightOnAlarmUiState
+    data class Success(val isAlarmEnabled: Boolean, val isPlaying: Boolean) : LightOnAlarmUiState
 }
