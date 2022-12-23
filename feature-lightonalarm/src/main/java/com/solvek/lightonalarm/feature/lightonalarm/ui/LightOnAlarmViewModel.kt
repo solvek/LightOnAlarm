@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import com.solvek.lightonalarm.core.data.LightOnAlarmRepository
+import com.solvek.lightonalarm.core.data.LightOnAlarmRepositoryOld
 import com.solvek.lightonalarm.feature.lightonalarm.ui.LightOnAlarmUiState.Error
 import com.solvek.lightonalarm.feature.lightonalarm.ui.LightOnAlarmUiState.Loading
 import com.solvek.lightonalarm.feature.lightonalarm.ui.LightOnAlarmUiState.Success
@@ -33,7 +33,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LightOnAlarmViewModel @Inject constructor(
-    private val lightOnAlarmRepository: LightOnAlarmRepository
+    private val lightOnAlarmRepository: LightOnAlarmRepositoryOld
 ) : ViewModel() {
 
     val uiState: StateFlow<LightOnAlarmUiState> = lightOnAlarmRepository

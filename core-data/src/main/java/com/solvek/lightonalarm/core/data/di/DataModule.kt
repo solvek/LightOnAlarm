@@ -22,7 +22,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
-import com.solvek.lightonalarm.core.data.LightOnAlarmRepository
+import com.solvek.lightonalarm.core.data.LightOnAlarmRepositoryOld
 import com.solvek.lightonalarm.core.data.DefaultLightOnAlarmRepository
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -35,10 +35,10 @@ interface DataModule {
     @Binds
     fun bindsLightOnAlarmRepository(
         lightOnAlarmRepository: DefaultLightOnAlarmRepository
-    ): LightOnAlarmRepository
+    ): LightOnAlarmRepositoryOld
 }
 
-class FakeLightOnAlarmRepository @Inject constructor() : LightOnAlarmRepository {
+class FakeLightOnAlarmRepository @Inject constructor() : LightOnAlarmRepositoryOld {
     override val lightOnAlarms: Flow<List<String>> = flowOf(fakeLightOnAlarms)
 
     override suspend fun add(name: String) {

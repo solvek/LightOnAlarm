@@ -24,7 +24,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import com.solvek.lightonalarm.core.data.LightOnAlarmRepository
+import com.solvek.lightonalarm.core.data.LightOnAlarmRepositoryOld
 import com.solvek.lightonalarm.feature.lightonalarm.ui.LightOnAlarmUiState
 import com.solvek.lightonalarm.feature.lightonalarm.ui.LightOnAlarmViewModel
 
@@ -48,7 +48,7 @@ class LightOnAlarmViewModelTest {
     }
 }
 
-private class FakeLightOnAlarmRepository : LightOnAlarmRepository {
+private class FakeLightOnAlarmRepository : LightOnAlarmRepositoryOld {
 
     private val data = mutableListOf<String>()
 

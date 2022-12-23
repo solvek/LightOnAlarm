@@ -31,7 +31,7 @@ import com.solvek.lightonalarm.core.database.LightOnAlarmDao
  * Unit tests for [DefaultLightOnAlarmRepository].
  */
 @OptIn(ExperimentalCoroutinesApi::class) // TODO: Remove when stable
-class DefaultLightOnAlarmRepositoryTest {
+class DefaultLightOnAlarmRepositoryOldTest {
 
     @Test
     fun lightOnAlarms_newItemSaved_itemIsReturned() = runTest {

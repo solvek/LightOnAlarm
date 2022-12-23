@@ -20,7 +20,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
-import com.solvek.lightonalarm.core.data.LightOnAlarmRepository
+import com.solvek.lightonalarm.core.data.LightOnAlarmRepositoryOld
 import com.solvek.lightonalarm.core.data.di.DataModule
 import com.solvek.lightonalarm.core.data.di.FakeLightOnAlarmRepository
 
@@ -34,5 +34,5 @@ interface FakeDataModule {
     @Binds
     abstract fun bindRepository(
         fakeRepository: FakeLightOnAlarmRepository
-    ): LightOnAlarmRepository
+    ): LightOnAlarmRepositoryOld
 }

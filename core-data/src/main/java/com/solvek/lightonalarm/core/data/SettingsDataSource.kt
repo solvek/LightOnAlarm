@@ -4,5 +4,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface SettingsDataSource {
     val isAlarmEnabledChanges: Flow<Boolean>
-    suspend fun setAlarmEnabled(enable: Boolean)
+    suspend fun setAlarmEnabled(enabled: Boolean)
 }
