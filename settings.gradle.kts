@@ -32,7 +32,6 @@ rootProject.name = "LightOnAlarm"
 
 include(":app")
 include(":core-data")
-include(":core-database")
 include(":core-testing")
 include(":core-ui")
 include(":feature-lightonalarm")

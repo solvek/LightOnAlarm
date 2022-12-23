@@ -51,8 +51,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":core-database"))
-
     // Arch Components
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
