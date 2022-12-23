@@ -1,9 +1,6 @@
 package com.solvek.lightonalarm.core.data
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -32,9 +29,11 @@ class LightOnAlarmRepository @Inject constructor(
         _isPlayingChanges.value = false
     }
 
-    fun notifyLightOn(){
+    suspend fun notifyLightOn(){
+        isAlarmEnabledChanges.first()
+
         if (!isEnabled!!) return
-        _isPlayingChanges.value = false
+        _isPlayingChanges.value = true
         playDataStore.play()
     }
 }
