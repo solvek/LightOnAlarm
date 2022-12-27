@@ -16,20 +16,30 @@
 
 package com.solvek.lightonalarm.ui
 
+import android.os.Build
 import android.os.Bundle
+import android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+import android.view.WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import dagger.hilt.android.AndroidEntryPoint
 import com.solvek.lightonalarm.core.ui.MyApplicationTheme
+import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) {
+            @Suppress("DEPRECATION")
+            window.addFlags(FLAG_TURN_SCREEN_ON or FLAG_KEEP_SCREEN_ON)
+        } else {
+            setTurnScreenOn(true)
+        }
         super.onCreate(savedInstanceState)
         setContent {
             MyApplicationTheme {

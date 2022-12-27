@@ -19,6 +19,9 @@ class LightOnBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent) {
         if (Intent.ACTION_POWER_CONNECTED == intent.action) {
             Log.i(TAG, "Power connected action received")
+            context?.let {
+                context.startActivity(LightOnAlarmService.createLaunchActivityIntent(context))
+            }
             CoroutineScope(SupervisorJob()).launch{
                 lightOnAlarmRepository.notifyLightOn()
             }

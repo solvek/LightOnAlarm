@@ -50,7 +50,7 @@ class LightOnAlarmService : Service() {
 
         createNotificationChannel()
 
-        val launchIntent = packageManager.getLaunchIntentForPackage("com.solvek.lightonalarm")
+        val launchIntent = createLaunchActivityIntent(this)
         val pendingIntent: PendingIntent =
             launchIntent.let { notificationIntent ->
                 PendingIntent.getActivity(this, 0, notificationIntent,
@@ -89,5 +89,8 @@ class LightOnAlarmService : Service() {
         private const val TAG = "LightOnAlarmService"
 
         private const val NOTIFICATION_CHANNEL_ID = "10001"
+
+        fun createLaunchActivityIntent(context: Context)
+            = context.packageManager.getLaunchIntentForPackage("com.solvek.lightonalarm")
     }
 }
