@@ -7,6 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -14,6 +15,7 @@ import androidx.lifecycle.Lifecycle.State.STARTED
 import androidx.lifecycle.repeatOnLifecycle
 import com.solvek.lightonalarm.feature.lightonalarm.ui.LightOnAlarmUiState.Success
 import com.solvek.lightonalarm.core.ui.MyApplicationTheme
+import com.solvek.lightonalarm.feature.lightonalarm.R
 
 @Composable
 fun LightOnAlarmScreen(modifier: Modifier = Modifier, viewModel: LightOnAlarmViewModel = hiltViewModel()) {
@@ -51,13 +53,15 @@ internal fun LightOnAlarmScreen(
         Row {
             Checkbox(checked = isEnabled, onCheckedChange = onChangeAlarmSetting)
             Spacer(modifier = Modifier.size(6.dp))
-            Text("Alarm active")
+            Text(stringResource(R.string.alarm_active))
         }
         if (isPlaying){
             Button(onClick = onStopPlaying) {
-                Text("Stop")
+                Text(stringResource(R.string.stop))
             }
         }
+        Text(stringResource(R.string.help))
+        Text(stringResource(R.string.stop_russians))
     }
 }
 
