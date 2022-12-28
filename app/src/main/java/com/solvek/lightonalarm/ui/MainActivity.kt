@@ -27,6 +27,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.solvek.lightonalarm.core.ui.MyApplicationTheme
+import com.solvek.lightonalarm.feature.lightonalarm.service.LightOnAlarmService.Companion.startLightOnAlarmService
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -34,6 +35,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        startLightOnAlarmService()
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) {
             @Suppress("DEPRECATION")
             window.addFlags(FLAG_TURN_SCREEN_ON or FLAG_KEEP_SCREEN_ON)

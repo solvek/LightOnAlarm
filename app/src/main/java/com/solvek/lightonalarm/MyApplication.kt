@@ -17,13 +17,7 @@
 package com.solvek.lightonalarm
 
 import android.app.Application
-import com.solvek.lightonalarm.feature.lightonalarm.service.startLightOnAlarmService
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class MyApplication : Application() {
-    override fun onCreate() {
-        super.onCreate()
-        startLightOnAlarmService()
-    }
-}
+class MyApplication : Application() {}

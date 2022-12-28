@@ -4,29 +4,44 @@ import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.media.MediaPlayer
 import android.os.Build
 import android.os.IBinder
+import android.os.PowerManager
+import android.os.PowerManager.WakeLock
 import android.util.Log
 import com.solvek.lightonalarm.feature.lightonalarm.R
 
-fun Context.startLightOnAlarmService(){
-    val i = Intent(this, LightOnAlarmService::class.java)
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        startForegroundService(i)
-    }
-    else {
-        startService(i)
-    }
-}
 
 class LightOnAlarmService : Service() {
     private val receiver = LightOnBroadcastReceiver()
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    private lateinit var mp: MediaPlayer
+    private lateinit var wakeLock: WakeLock
+
+    override fun onCreate() {
+        super.onCreate()
         Log.i(TAG, "Service started")
+
+        mp = MediaPlayer.create(this, R.raw.alarm)
+        mp.isLooping = true
 
         registerReceiver()
         addNotification()
+
+        val pm = applicationContext.getSystemService(POWER_SERVICE) as PowerManager
+        wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "LightOnAlarm:MusicService")
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Log.i(TAG, "Received command")
+
+        if (intent != null && intent.hasExtra(EXTRA_COMMAND)){
+            when(intent.getIntExtra(EXTRA_COMMAND, -1)){
+                COMMAND_PLAY -> play()
+                COMMAND_STOP -> stop()
+            }
+        }
 
         return super.onStartCommand(intent, flags, startId)
     }
@@ -38,6 +53,17 @@ class LightOnAlarmService : Service() {
     }
 
     override fun onBind(p0: Intent?): IBinder? {return null}
+
+    private fun play(){
+        wakeLock.acquire(5*60*1000L)
+        mp.start()
+    }
+
+    private fun stop(){
+        mp.stop()
+        if(wakeLock.isHeld)
+            wakeLock.release()
+    }
 
     private fun registerReceiver() {
         val filter = IntentFilter()
@@ -92,5 +118,39 @@ class LightOnAlarmService : Service() {
 
         fun createLaunchActivityIntent(context: Context)
             = context.packageManager.getLaunchIntentForPackage("com.solvek.lightonalarm")
+
+        private const val COMMAND_PLAY = 1
+        private const val COMMAND_STOP = 2
+
+        private const val EXTRA_COMMAND = "command"
+
+        fun Context.playAlarm(){
+            runCommand(COMMAND_PLAY)
+        }
+
+        fun Context.stopAlarm(){
+            runCommand(COMMAND_STOP)
+        }
+
+        fun Context.startLightOnAlarmService(){
+            startLightOnAlarmService(createIntent())
+        }
+
+        private fun Context.startLightOnAlarmService(i: Intent){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(i)
+            }
+            else {
+                startService(i)
+            }
+        }
+
+        private fun Context.createIntent() = Intent(this, LightOnAlarmService::class.java)
+
+        private fun Context.runCommand(command: Int){
+            val intent = this.createIntent()
+            intent.putExtra(EXTRA_COMMAND, command)
+            this.startLightOnAlarmService(intent)
+        }
     }
 }
