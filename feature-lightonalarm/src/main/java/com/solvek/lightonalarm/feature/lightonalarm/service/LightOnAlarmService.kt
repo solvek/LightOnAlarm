@@ -60,7 +60,8 @@ class LightOnAlarmService : Service() {
     }
 
     private fun stop(){
-        mp.stop()
+        mp.pause();
+        mp.seekTo(0);
         if(wakeLock.isHeld)
             wakeLock.release()
     }
