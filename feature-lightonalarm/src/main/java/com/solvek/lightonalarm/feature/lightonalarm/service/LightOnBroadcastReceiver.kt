@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.solvek.lightonalarm.core.data.LightOnAlarmRepository
+import com.solvek.lightonalarm.feature.lightonalarm.service.LightOnAlarmService.Companion.startLightOnAlarmService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -17,14 +18,17 @@ class LightOnBroadcastReceiver : BroadcastReceiver() {
     lateinit var lightOnAlarmRepository: LightOnAlarmRepository
 
     override fun onReceive(context: Context?, intent: Intent) {
-        if (Intent.ACTION_POWER_CONNECTED == intent.action) {
-            Log.i(TAG, "Power connected action received")
-            context?.let {
-                context.startActivity(LightOnAlarmService.createLaunchActivityIntent(context))
-            }
-            CoroutineScope(SupervisorJob()).launch{
-                lightOnAlarmRepository.notifyLightOn()
-            }
+        if (Intent.ACTION_BOOT_COMPLETED == intent.action) {
+            context!!.startLightOnAlarmService()
+            return
+        }
+
+        Log.i(TAG, "Power connected action received")
+        context?.let {
+            context.startActivity(LightOnAlarmService.createLaunchActivityIntent(context))
+        }
+        CoroutineScope(SupervisorJob()).launch{
+            lightOnAlarmRepository.notifyLightOn()
         }
     }
 
